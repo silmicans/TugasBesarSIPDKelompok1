@@ -1,0 +1,1066 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet-svg-shape-markers.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="data/PolaRuang_1.js"></script>
+        <script src="data/DayaDukungLahan_2.js"></script>
+        <script src="data/JaringanJalan_3.js"></script>
+        <script src="data/8001200_4.js"></script>
+        <script src="data/400800_5.js"></script>
+        <script src="data/0400_6.js"></script>
+        <script src="data/12km_7.js"></script>
+        <script src="data/1km_8.js"></script>
+        <script src="data/JalanUtama_9.js"></script>
+        <script src="data/WisataBuatan_10.js"></script>
+        <script src="data/DesaWisata_11.js"></script>
+        <script src="data/WisataAlam_12.js"></script>
+        <script src="data/WisataBudaya_13.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+        }
+        map.createPane('pane_Positron_0');
+        map.getPane('pane_Positron_0').style.zIndex = 400;
+        var layer_Positron_0 = L.tileLayer('https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            pane: 'pane_Positron_0',
+            opacity: 1.0,
+            attribution: '<a href="https://cartodb.com/basemaps/">Map tiles by CartoDB, under CC BY 3.0. Data by OpenStreetMap, under ODbL.</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_Positron_0;
+        map.addLayer(layer_Positron_0);
+        function pop_PolaRuang_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['landuse2'] !== null ? autolinker.link(feature.properties['landuse2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_PolaRuang_1_0(feature) {
+            switch(String(feature.properties['landuse2'])) {
+                case 'Hortikultura':
+                    return {
+                pane: 'pane_PolaRuang_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,255,230,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Hutan Lindung':
+                    return {
+                pane: 'pane_PolaRuang_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(224,255,230,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Hutan Produksi':
+                    return {
+                pane: 'pane_PolaRuang_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,255,230,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Industri':
+                    return {
+                pane: 'pane_PolaRuang_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,230,179,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kawasan Resapan Air':
+                    return {
+                pane: 'pane_PolaRuang_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(232,255,224,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'LP2B':
+                    return {
+                pane: 'pane_PolaRuang_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(204,255,179,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Perkebunan':
+                    return {
+                pane: 'pane_PolaRuang_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(204,255,128,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Permukiman Perdesaan':
+                    return {
+                pane: 'pane_PolaRuang_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,204,76,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Permukiman Perkotaan':
+                    return {
+                pane: 'pane_PolaRuang_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,179,64,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pertanian':
+                    return {
+                pane: 'pane_PolaRuang_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(242,247,247,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RTH Perkotaan':
+                    return {
+                pane: 'pane_PolaRuang_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(153,255,191,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Taman Hutan Raya':
+                    return {
+                pane: 'pane_PolaRuang_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,179,255,1.0)',
+                interactive: true,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_PolaRuang_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(43,131,186,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_PolaRuang_1');
+        map.getPane('pane_PolaRuang_1').style.zIndex = 401;
+        map.getPane('pane_PolaRuang_1').style['mix-blend-mode'] = 'normal';
+        var layer_PolaRuang_1 = new L.geoJson(json_PolaRuang_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_PolaRuang_1',
+            layerName: 'layer_PolaRuang_1',
+            pane: 'pane_PolaRuang_1',
+            onEachFeature: pop_PolaRuang_1,
+            style: style_PolaRuang_1_0,
+        });
+        bounds_group.addLayer(layer_PolaRuang_1);
+        map.addLayer(layer_PolaRuang_1);
+        function pop_DayaDukungLahan_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['DY_DKUNG'] !== null ? autolinker.link(feature.properties['DY_DKUNG'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_DayaDukungLahan_2_0(feature) {
+            switch(String(feature.properties['DY_DKUNG'])) {
+                case 'Cagar Budaya':
+                    return {
+                pane: 'pane_DayaDukungLahan_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,204,230,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kawasan Wisata Alam':
+                    return {
+                pane: 'pane_DayaDukungLahan_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,153,255,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Rawan Bencana':
+                    return {
+                pane: 'pane_DayaDukungLahan_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,242,255,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_DayaDukungLahan_2');
+        map.getPane('pane_DayaDukungLahan_2').style.zIndex = 402;
+        map.getPane('pane_DayaDukungLahan_2').style['mix-blend-mode'] = 'normal';
+        var layer_DayaDukungLahan_2 = new L.geoJson(json_DayaDukungLahan_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_DayaDukungLahan_2',
+            layerName: 'layer_DayaDukungLahan_2',
+            pane: 'pane_DayaDukungLahan_2',
+            onEachFeature: pop_DayaDukungLahan_2,
+            style: style_DayaDukungLahan_2_0,
+        });
+        bounds_group.addLayer(layer_DayaDukungLahan_2);
+        map.addLayer(layer_DayaDukungLahan_2);
+        function pop_JaringanJalan_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+        }
+
+        function style_JaringanJalan_3_0() {
+            return {
+                pane: 'pane_JaringanJalan_3',
+                opacity: 1,
+                color: 'rgba(178,178,255,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_JaringanJalan_3');
+        map.getPane('pane_JaringanJalan_3').style.zIndex = 403;
+        map.getPane('pane_JaringanJalan_3').style['mix-blend-mode'] = 'normal';
+        var layer_JaringanJalan_3 = new L.geoJson(json_JaringanJalan_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_JaringanJalan_3',
+            layerName: 'layer_JaringanJalan_3',
+            pane: 'pane_JaringanJalan_3',
+            onEachFeature: pop_JaringanJalan_3,
+            style: style_JaringanJalan_3_0,
+        });
+        bounds_group.addLayer(layer_JaringanJalan_3);
+        map.addLayer(layer_JaringanJalan_3);
+        function pop_8001200_4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Keterjangkauan Wisata dan Fasilitas</th>\
+                        <td>' + (feature.properties['layer'] !== null ? autolinker.link(feature.properties['layer'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_8001200_4_0() {
+            return {
+                pane: 'pane_8001200_4',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(216,36,36,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_8001200_4');
+        map.getPane('pane_8001200_4').style.zIndex = 404;
+        map.getPane('pane_8001200_4').style['mix-blend-mode'] = 'normal';
+        var layer_8001200_4 = new L.geoJson(json_8001200_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_8001200_4',
+            layerName: 'layer_8001200_4',
+            pane: 'pane_8001200_4',
+            onEachFeature: pop_8001200_4,
+            style: style_8001200_4_0,
+        });
+        bounds_group.addLayer(layer_8001200_4);
+        map.addLayer(layer_8001200_4);
+        function pop_400800_5(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Keterjangkauan Wisata dan Fasilitas</th>\
+                        <td>' + (feature.properties['layer'] !== null ? autolinker.link(feature.properties['layer'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_400800_5_0() {
+            return {
+                pane: 'pane_400800_5',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(215,221,50,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_400800_5');
+        map.getPane('pane_400800_5').style.zIndex = 405;
+        map.getPane('pane_400800_5').style['mix-blend-mode'] = 'normal';
+        var layer_400800_5 = new L.geoJson(json_400800_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_400800_5',
+            layerName: 'layer_400800_5',
+            pane: 'pane_400800_5',
+            onEachFeature: pop_400800_5,
+            style: style_400800_5_0,
+        });
+        bounds_group.addLayer(layer_400800_5);
+        map.addLayer(layer_400800_5);
+        function pop_0400_6(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Keterjangkauan Wisata dan Fasilitas</th>\
+                        <td>' + (feature.properties['layer'] !== null ? autolinker.link(feature.properties['layer'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_0400_6_0() {
+            return {
+                pane: 'pane_0400_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(35,23,255,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_0400_6');
+        map.getPane('pane_0400_6').style.zIndex = 406;
+        map.getPane('pane_0400_6').style['mix-blend-mode'] = 'normal';
+        var layer_0400_6 = new L.geoJson(json_0400_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_0400_6',
+            layerName: 'layer_0400_6',
+            pane: 'pane_0400_6',
+            onEachFeature: pop_0400_6,
+            style: style_0400_6_0,
+        });
+        bounds_group.addLayer(layer_0400_6);
+        map.addLayer(layer_0400_6);
+        function pop_12km_7(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Keterjangkauan Jalan</th>\
+                        <td>' + (feature.properties['layer'] !== null ? autolinker.link(feature.properties['layer'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_12km_7_0() {
+            return {
+                pane: 'pane_12km_7',
+                opacity: 1,
+                color: 'rgba(113,167,255,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_12km_7');
+        map.getPane('pane_12km_7').style.zIndex = 407;
+        map.getPane('pane_12km_7').style['mix-blend-mode'] = 'normal';
+        var layer_12km_7 = new L.geoJson(json_12km_7, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_12km_7',
+            layerName: 'layer_12km_7',
+            pane: 'pane_12km_7',
+            onEachFeature: pop_12km_7,
+            style: style_12km_7_0,
+        });
+        bounds_group.addLayer(layer_12km_7);
+        map.addLayer(layer_12km_7);
+        function pop_1km_8(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Keterjangkauan Jalan</th>\
+                        <td>' + (feature.properties['layer'] !== null ? autolinker.link(feature.properties['layer'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_1km_8_0() {
+            return {
+                pane: 'pane_1km_8',
+                opacity: 1,
+                color: 'rgba(159,255,95,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_1km_8');
+        map.getPane('pane_1km_8').style.zIndex = 408;
+        map.getPane('pane_1km_8').style['mix-blend-mode'] = 'normal';
+        var layer_1km_8 = new L.geoJson(json_1km_8, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_1km_8',
+            layerName: 'layer_1km_8',
+            pane: 'pane_1km_8',
+            onEachFeature: pop_1km_8,
+            style: style_1km_8_0,
+        });
+        bounds_group.addLayer(layer_1km_8);
+        map.addLayer(layer_1km_8);
+        function pop_JalanUtama_9(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAMA_UNSUR'] !== null ? autolinker.link(feature.properties['NAMA_UNSUR'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_JalanUtama_9_0(feature) {
+            switch(String(feature.properties['NAMA_UNSUR'])) {
+                case 'Jalan Arteri':
+                    return {
+                pane: 'pane_JalanUtama_9',
+                opacity: 1,
+                color: 'rgba(255,127,0,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 6.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case 'Jalan Kolektor':
+                    return {
+                pane: 'pane_JalanUtama_9',
+                opacity: 1,
+                color: 'rgba(178,122,0,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_JalanUtama_9');
+        map.getPane('pane_JalanUtama_9').style.zIndex = 409;
+        map.getPane('pane_JalanUtama_9').style['mix-blend-mode'] = 'normal';
+        var layer_JalanUtama_9 = new L.geoJson(json_JalanUtama_9, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_JalanUtama_9',
+            layerName: 'layer_JalanUtama_9',
+            pane: 'pane_JalanUtama_9',
+            onEachFeature: pop_JalanUtama_9,
+            style: style_JalanUtama_9_0,
+        });
+        bounds_group.addLayer(layer_JalanUtama_9);
+        map.addLayer(layer_JalanUtama_9);
+        function pop_WisataBuatan_10(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Nama</th>\
+                        <td>' + (feature.properties['Wisata_Bua'] !== null ? autolinker.link(feature.properties['Wisata_Bua'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Foto'] !== null ? '<img src="images/' + String(feature.properties['Foto']).replace(/[\\\/:]/g, '_').trim() + '">' : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Alamat</strong><br />' + (feature.properties['Desc_Alamat'] !== null ? autolinker.link(feature.properties['Desc_Alamat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Pengelola</th>\
+                        <td>' + (feature.properties['Desc_Pengelola'] !== null ? autolinker.link(feature.properties['Desc_Pengelola'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">HTM</th>\
+                        <td>' + (feature.properties['Desc_HTM'] !== null ? autolinker.link(feature.properties['Desc_HTM'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Jam Operasional</th>\
+                        <td>' + (feature.properties['Desc_Jam Operational'] !== null ? autolinker.link(feature.properties['Desc_Jam Operational'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Kategori</th>\
+                        <td>' + (feature.properties['Desc_Kategori'] !== null ? autolinker.link(feature.properties['Desc_Kategori'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_WisataBuatan_10_0() {
+            return {
+                pane: 'pane_WisataBuatan_10',
+                shape: 'diamond',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(213,30,219,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_WisataBuatan_10');
+        map.getPane('pane_WisataBuatan_10').style.zIndex = 410;
+        map.getPane('pane_WisataBuatan_10').style['mix-blend-mode'] = 'normal';
+        var layer_WisataBuatan_10 = new L.geoJson(json_WisataBuatan_10, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_WisataBuatan_10',
+            layerName: 'layer_WisataBuatan_10',
+            pane: 'pane_WisataBuatan_10',
+            onEachFeature: pop_WisataBuatan_10,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_WisataBuatan_10_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_WisataBuatan_10);
+        map.addLayer(layer_WisataBuatan_10);
+        function pop_DesaWisata_11(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Nama</th>\
+                        <td>' + (feature.properties['Nama'] !== null ? autolinker.link(feature.properties['Nama'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Foto'] !== null ? '<img src="images/' + String(feature.properties['Foto']).replace(/[\\\/:]/g, '_').trim() + '">' : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Alamat</strong><br />' + (feature.properties['Desc_Alamat'] !== null ? autolinker.link(feature.properties['Desc_Alamat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Pengelola</th>\
+                        <td>' + (feature.properties['Desc_Pengelola'] !== null ? autolinker.link(feature.properties['Desc_Pengelola'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">HTM</th>\
+                        <td>' + (feature.properties['Desc_HTM'] !== null ? autolinker.link(feature.properties['Desc_HTM'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Jam Operasional</th>\
+                        <td>' + (feature.properties['Desc_Jam Operational'] !== null ? autolinker.link(feature.properties['Desc_Jam Operational'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Kategori</th>\
+                        <td>' + (feature.properties['Desc_Kategori'] !== null ? autolinker.link(feature.properties['Desc_Kategori'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_DesaWisata_11_0() {
+            return {
+                pane: 'pane_DesaWisata_11',
+                shape: 'diamond',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(219,30,42,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_DesaWisata_11');
+        map.getPane('pane_DesaWisata_11').style.zIndex = 411;
+        map.getPane('pane_DesaWisata_11').style['mix-blend-mode'] = 'normal';
+        var layer_DesaWisata_11 = new L.geoJson(json_DesaWisata_11, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_DesaWisata_11',
+            layerName: 'layer_DesaWisata_11',
+            pane: 'pane_DesaWisata_11',
+            onEachFeature: pop_DesaWisata_11,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_DesaWisata_11_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_DesaWisata_11);
+        map.addLayer(layer_DesaWisata_11);
+        function pop_WisataAlam_12(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Nama</th>\
+                        <td>' + (feature.properties['Wisata_Ala'] !== null ? autolinker.link(feature.properties['Wisata_Ala'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Foto'] !== null ? '<img src="images/' + String(feature.properties['Foto']).replace(/[\\\/:]/g, '_').trim() + '">' : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Alamat</strong><br />' + (feature.properties['Desc_Alamat'] !== null ? autolinker.link(feature.properties['Desc_Alamat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Pengelola</th>\
+                        <td>' + (feature.properties['Desc_Pengelola'] !== null ? autolinker.link(feature.properties['Desc_Pengelola'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">HTM</th>\
+                        <td>' + (feature.properties['Desc_HTM'] !== null ? autolinker.link(feature.properties['Desc_HTM'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Jam Operasional</th>\
+                        <td>' + (feature.properties['Desc_Jam Operational'] !== null ? autolinker.link(feature.properties['Desc_Jam Operational'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Kategori</th>\
+                        <td>' + (feature.properties['Desc_Kategori'] !== null ? autolinker.link(feature.properties['Desc_Kategori'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_WisataAlam_12_0() {
+            return {
+                pane: 'pane_WisataAlam_12',
+                shape: 'diamond',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(84,176,74,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_WisataAlam_12');
+        map.getPane('pane_WisataAlam_12').style.zIndex = 412;
+        map.getPane('pane_WisataAlam_12').style['mix-blend-mode'] = 'normal';
+        var layer_WisataAlam_12 = new L.geoJson(json_WisataAlam_12, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_WisataAlam_12',
+            layerName: 'layer_WisataAlam_12',
+            pane: 'pane_WisataAlam_12',
+            onEachFeature: pop_WisataAlam_12,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_WisataAlam_12_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_WisataAlam_12);
+        map.addLayer(layer_WisataAlam_12);
+        function pop_WisataBudaya_13(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Nama</th>\
+                        <td>' + (feature.properties['Wisata Bud'] !== null ? autolinker.link(feature.properties['Wisata Bud'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Foto'] !== null ? '<img src="images/' + String(feature.properties['Foto']).replace(/[\\\/:]/g, '_').trim() + '">' : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Alamat</strong><br />' + (feature.properties['Desc_Alamat'] !== null ? autolinker.link(feature.properties['Desc_Alamat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Pengelola</th>\
+                        <td>' + (feature.properties['Desc_Pengelola'] !== null ? autolinker.link(feature.properties['Desc_Pengelola'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">HTM</th>\
+                        <td>' + (feature.properties['Desc_HTM'] !== null ? autolinker.link(feature.properties['Desc_HTM'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Jam Operasional</th>\
+                        <td>' + (feature.properties['Desc_Jam Operational'] !== null ? autolinker.link(feature.properties['Desc_Jam Operational'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Kategori</th>\
+                        <td>' + (feature.properties['Desc_Kategori'] !== null ? autolinker.link(feature.properties['Desc_Kategori'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_WisataBudaya_13_0() {
+            return {
+                pane: 'pane_WisataBudaya_13',
+                shape: 'diamond',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(198,99,0,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_WisataBudaya_13');
+        map.getPane('pane_WisataBudaya_13').style.zIndex = 413;
+        map.getPane('pane_WisataBudaya_13').style['mix-blend-mode'] = 'normal';
+        var layer_WisataBudaya_13 = new L.geoJson(json_WisataBudaya_13, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_WisataBudaya_13',
+            layerName: 'layer_WisataBudaya_13',
+            pane: 'pane_WisataBudaya_13',
+            onEachFeature: pop_WisataBudaya_13,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_WisataBudaya_13_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_WisataBudaya_13);
+        map.addLayer(layer_WisataBudaya_13);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/WisataBudaya_13.png" /> Wisata Budaya': layer_WisataBudaya_13,'<img src="legend/WisataAlam_12.png" /> Wisata Alam': layer_WisataAlam_12,'<img src="legend/DesaWisata_11.png" /> Desa Wisata': layer_DesaWisata_11,'<img src="legend/WisataBuatan_10.png" /> Wisata Buatan': layer_WisataBuatan_10,'Jalan Utama<br /><table><tr><td style="text-align: center;"><img src="legend/JalanUtama_9_JalanArteri0.png" /></td><td>Jalan Arteri</td></tr><tr><td style="text-align: center;"><img src="legend/JalanUtama_9_JalanKolektor1.png" /></td><td>Jalan Kolektor</td></tr></table>': layer_JalanUtama_9,'<img src="legend/1km_8.png" /> > 1 km': layer_1km_8,'<img src="legend/12km_7.png" /> 1 - 2 km': layer_12km_7,'<img src="legend/0400_6.png" /> 0 - 400': layer_0400_6,'<img src="legend/400800_5.png" /> 400 - 800': layer_400800_5,'<img src="legend/8001200_4.png" /> 800 - 1200': layer_8001200_4,'<img src="legend/JaringanJalan_3.png" /> Jaringan Jalan': layer_JaringanJalan_3,'Daya Dukung Lahan<br /><table><tr><td style="text-align: center;"><img src="legend/DayaDukungLahan_2_CagarBudaya0.png" /></td><td>Cagar Budaya</td></tr><tr><td style="text-align: center;"><img src="legend/DayaDukungLahan_2_KawasanWisataAlam1.png" /></td><td>Kawasan Wisata Alam</td></tr><tr><td style="text-align: center;"><img src="legend/DayaDukungLahan_2_RawanBencana2.png" /></td><td>Rawan Bencana</td></tr></table>': layer_DayaDukungLahan_2,'Pola Ruang<br /><table><tr><td style="text-align: center;"><img src="legend/PolaRuang_1_Hortikultura0.png" /></td><td>Hortikultura</td></tr><tr><td style="text-align: center;"><img src="legend/PolaRuang_1_HutanLindung1.png" /></td><td>Hutan Lindung</td></tr><tr><td style="text-align: center;"><img src="legend/PolaRuang_1_HutanProduksi2.png" /></td><td>Hutan Produksi</td></tr><tr><td style="text-align: center;"><img src="legend/PolaRuang_1_Industri3.png" /></td><td>Industri</td></tr><tr><td style="text-align: center;"><img src="legend/PolaRuang_1_KawasanResapanAir4.png" /></td><td>Kawasan Resapan Air</td></tr><tr><td style="text-align: center;"><img src="legend/PolaRuang_1_LP2B5.png" /></td><td>LP2B</td></tr><tr><td style="text-align: center;"><img src="legend/PolaRuang_1_Perkebunan6.png" /></td><td>Perkebunan</td></tr><tr><td style="text-align: center;"><img src="legend/PolaRuang_1_PermukimanPerdesaan7.png" /></td><td>Permukiman Perdesaan</td></tr><tr><td style="text-align: center;"><img src="legend/PolaRuang_1_PermukimanPerkotaan8.png" /></td><td>Permukiman Perkotaan</td></tr><tr><td style="text-align: center;"><img src="legend/PolaRuang_1_Pertanian9.png" /></td><td>Pertanian</td></tr><tr><td style="text-align: center;"><img src="legend/PolaRuang_1_RTHPerkotaan10.png" /></td><td>RTH Perkotaan</td></tr><tr><td style="text-align: center;"><img src="legend/PolaRuang_1_TamanHutanRaya11.png" /></td><td>Taman Hutan Raya</td></tr><tr><td style="text-align: center;"><img src="legend/PolaRuang_1_12.png" /></td><td></td></tr></table>': layer_PolaRuang_1,"Positron": layer_Positron_0,}).addTo(map);
+        setBounds();
+        resetLabels([layer_WisataBuatan_10,layer_DesaWisata_11,layer_WisataAlam_12,layer_WisataBudaya_13]);
+        map.on("zoomend", function(){
+            resetLabels([layer_WisataBuatan_10,layer_DesaWisata_11,layer_WisataAlam_12,layer_WisataBudaya_13]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_WisataBuatan_10,layer_DesaWisata_11,layer_WisataAlam_12,layer_WisataBudaya_13]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_WisataBuatan_10,layer_DesaWisata_11,layer_WisataAlam_12,layer_WisataBudaya_13]);
+        });
+        </script>
+    </body>
+</html>
